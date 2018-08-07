@@ -67,11 +67,18 @@ class Numericality extends Validator
 	 */
 	public function validate(<Validation> validation, string! field) -> boolean
 	{
-		var value, message, label, replacePairs, code;
+		var value, message, label, replacePairs, code, locale_info, decimal_point, decimals;
 
 		let value = validation->getValue(field);
 
-		if !preg_match("/^-?\d+[\.,]?\d*$/", value) || !is_numeric(value) {
+		let decimals = ".";
+		let locale_info = localeconv();
+
+		if (fetch decimal_point, locale_info["decimal_point"] && decimal_point != ".") {
+			let decimals += decimal_point;
+		}
+
+		if !preg_match("/^-?\d+(?:[" . preg_quote(decimals, "/") . "]?\d+)?$/", value) {
 			let label = this->prepareLabel(validation, field),
 				message = this->prepareMessage(validation, field, "Numericality"),
 				code = this->prepareCode(field);
