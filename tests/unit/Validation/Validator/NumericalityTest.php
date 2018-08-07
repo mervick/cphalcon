@@ -123,7 +123,10 @@ class NumericalityTest extends UnitTest
 
             $this->setTestLocale('fr_FR.UTF-8');
 
-            expect((string)123.12)->equals('123,12');
+            $decimal_point = localeconv()['decimal_point'];
+            expect($decimal_point)->equals(',');
+
+//            expect((string)123.12)->equals("123{$decimal_point}12");
             $messages = $validation->validate(['amount' => 123.12]);
             expect($messages->count())->equals(0);
             $messages = $validation->validate(['amount' => '123.12']);
