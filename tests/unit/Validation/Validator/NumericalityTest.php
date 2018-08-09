@@ -93,9 +93,6 @@ class NumericalityTest extends UnitTest
         putenv('LC_ALL=' . $locale);
         putenv('LANG=' . $locale);
         putenv('LANGUAGE=' . $locale);
-        putenv('LC_NUMERIC=' . $locale);
-
-        setlocale(LC_NUMERIC, $locale);
         return setlocale(LC_ALL, $locale);
     }
 
@@ -125,10 +122,14 @@ class NumericalityTest extends UnitTest
             $messages = $validation->validate(['amount' => '123,12']);
             expect($messages->count())->equals(1);
 
-            $locale = $this->setTestLocale('fr_FR.UTF8');
+            $this->setTestLocale('fr_FR.UTF8');
 
             $messages = $validation->validate(['amount' => 123.12]);
             expect($messages->count())->equals(0);
+            $messages = $validation->validate(['amount' => '123.12']);
+            expect($messages->count())->equals(0);
+            $messages = $validation->validate(['amount' => '123,12']);
+            expect($messages->count())->equals(1);
 
             // revert back locale
             $this->setTestLocale($locale);
