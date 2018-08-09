@@ -113,9 +113,11 @@ class NumericalityTest extends UnitTest
             $validation = new Validation();
             $validation->add('amount', new Numericality());
 
-            $this->setTestLocale('en_US.UTF-8');
+            // get default locale
+            $locale = setlocale(LC_ALL, 0);
 
-            expect((string)123.12)->equals('123.12');
+            $this->setTestLocale('en_US.UTF8');
+
             $messages = $validation->validate(['amount' => 123.12]);
             expect($messages->count())->equals(0);
             $messages = $validation->validate(['amount' => '123.12']);
@@ -123,19 +125,13 @@ class NumericalityTest extends UnitTest
             $messages = $validation->validate(['amount' => '123,12']);
             expect($messages->count())->equals(1);
 
-            $locale = $this->setTestLocale('fr_FR.UTF-8');
-            expect($locale)->equals(setlocale(LC_NUMERIC, 0));
+            $locale = $this->setTestLocale('fr_FR.UTF8');
 
-            expect((string)123.12)->equals('123.12');
             $messages = $validation->validate(['amount' => 123.12]);
-            expect($messages->count())->equals(0);
-            $messages = $validation->validate(['amount' => '123.12']);
-            expect($messages->count())->equals(0);
-            $messages = $validation->validate(['amount' => '123,12']);
             expect($messages->count())->equals(0);
 
             // revert back locale
-            $this->setTestLocale('en_US.UTF-8');
+            $this->setTestLocale($locale);
         });
     }
 }
