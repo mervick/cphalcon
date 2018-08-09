@@ -123,7 +123,8 @@ class NumericalityTest extends UnitTest
             $messages = $validation->validate(['amount' => '123,12']);
             expect($messages->count())->equals(1);
 
-            $this->setTestLocale('fr_FR.UTF-8');
+            $locale = $this->setTestLocale('fr_FR.UTF-8');
+            expect($locale)->equals(setlocale(LC_NUMERIC, 0));
 
             expect((string)123.12)->equals('123.12');
             $messages = $validation->validate(['amount' => 123.12]);
