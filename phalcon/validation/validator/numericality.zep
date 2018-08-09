@@ -75,7 +75,7 @@ class Numericality extends Validator
 		let locale_info = localeconv();
 
 		if (fetch decimal_point, locale_info["decimal_point"] && decimal_point != ".") {
-			let decimals += decimal_point;
+			let decimals .= decimal_point;
 		}
 
 		if !preg_match("/^-?\d+(?:[" . preg_quote(decimals, "/") . "]?\d+)?$/", value) {
